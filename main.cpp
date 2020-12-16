@@ -11,7 +11,7 @@ int findCount(const char*str,const char* substr,int *num);
  * @description:输出匹配到的子串个数，另外的一种方法。
  */
 void test1();
-int getStr(const char *str,char *re,char *key);
+int getStr(const char *str,const char *substr,char *re,char *key);
 /**
  * @function:匹配到value值
  * @param str :输入字符串.const char *
@@ -76,13 +76,27 @@ void test1()
     printf("%d\n",sum);
 }
 
-int getStr(const char *str,char *re,char *key)
+int getStr(const char *str,const char *sub,char *re,char *key)
 {
     if (str== NULL && re==NULL)
     {
         return -1;
     }
-    sscanf(str,"%s = %s",key,re);
+    char tempk[100],tempv[100];
+    sscanf(str," %[^=] = %[^\n]",tempk,tempv);
+    int len=strlen(tempk)-1;
+    int len1=strlen(tempv)-1;
+    int i=0;
+    while(isspace(tempk[len]))
+    {
+        len--;
+    }
+    memcpy(key,tempk,len+1);
+    while(isspace(tempv[len1]))
+    {
+        len1--;
+    }
+    memcpy(re,tempv,len1+1);
     return 0;
 }
 /**测试用例：
@@ -97,13 +111,13 @@ int getStr(const char *str,char *re,char *key)
 void test3()
 {
     char re[100],key[100];
-    const char *te="key4        = valude4    ";
-    int e=getStr(te,re,key);
+    const char *te="    key4        =     valude4   str ";
+    int e=getStr(te,"key4",re,key);
     if (e!=0)
     {
         printf("Error: 输入为空");
     }
-    printf("%s : %s\n",key,re);
+    printf("%s : %s\n%d %d\n",key,re,strlen(key),strlen(re));
 }
 
 int jiou(const char*str,char *reji,char *reou)
