@@ -1,167 +1,66 @@
-#include <iostream>
 #include <bits/stdc++.h>
-using namespace std;
-int findCount(const char*str,const char* substr,int *num);
-/**
- * @function:输出匹配到的子串的个数
- * @param str:输入字符串，const char*
- * @param substr：匹配子串，const char*
- * @param num：输出个数，int*
- * @return ：返回状态
- * @description:输出匹配到的子串个数，另外的一种方法。
- */
-void test1();
-int getStr(const char *str,const char *substr,char *re,char *key);
-/**
- * @function:匹配到value值
- * @param str :输入字符串.const char *
- * @param re ：匹配输出的字符串value,char*
- * @param key:匹配输出的字符串key,char*
- * @return ：返回状态int型
- * @description：给定"key = value"输出value
- */
- void test3();
-int jiou(const char*str,char *reji,char *reou);
-/**
- * @function：输出奇数位和偶数位的字符串。
- * @param str :输入的字符串,const char*
- * @param reji ：输出的奇数位字符串，char*
- * @param reou : 输出的偶数位字符串，char*
- * @return 返回状态
- * @description：输出奇数位和偶数位的字符串，并且用函数参数来传递值
- */
- void test4();
-int findCount(const char*str,const char* substr,int *num)
+#include <stdio.h>
+#define CSIZE 4
+typedef struct name
 {
-    if(str==NULL || num==NULL||substr==NULL)
-    {
-        return -1;
-    }
-    int count=0;
-    int len=strlen(str);
-    int a[len],j=0;
-    for(int i=0;i<len;++i)
-    {
-        if(str[i]==substr[0])
-            a[j++]=i;
-    }
-    if(j==0)*num=0;
-    int len1=strlen(substr);
+        char *ming;
+     char *xing;
+}name;
+typedef struct student
+{
+    name mingzi;
+    double grade[3];
+    double avg;
+}stduent;
 
-    for(int i=0;i<j;++i)
+double getAvg(student a)
+{
+    double sum=0;
+    for(int i=0;i<3;++i)
     {
-        int flag=1;
-        for(int k=0;k<len1;++k)
+        sum+=a.grade[i];
+    }
+    return sum/3;
+}
+
+
+int main()
+{
+    student stu[CSIZE];
+    name *n=(name *)malloc(sizeof (name)*CSIZE);
+    n[0].ming="wang",n[0].xing="ming";
+    n[1].ming="zhang",n[1].xing="san";
+    n[2].ming="wu",n[2].xing="yong";
+    n[3].ming="san",n[3].xing="san";
+    for(int i=0;i<CSIZE;++i)
+    {
+        stu[i].mingzi=n[i];
+    }
+    for(int i=0;i<CSIZE;++i)
+    {
+        name a;
+        scanf("%s %s",a.xing,a.ming);
+        for(int j=0;j<CSIZE;++j)
         {
-            if(str[a[i]+k]=='\0' || str[a[i]+k]!=substr[k])
+            if(!strcmp(stu[j].mingzi.xing,a.xing) && !strcmp(stu[j].mingzi.ming,a.ming))
             {
-                flag=0;
-                break;
+                scanf("%lf %lf %lf",&stu[j].grade[0],&stu[j].grade[1],&stu[j].grade[2]);
             }
         }
-        if(flag==1)count++;
+        for(int i=0;i<CSIZE;++i)
+        {
+            stu[i].avg=getAvg(stu[i]);
+        }
     }
-    *num=count;
-    return 0;
-}
-/**测试用例
- * "abcd1111222abcd333444abcd555666aa","abcd"
- */
-void test1()
-{
-    const char *str1="abcd1111222abcd333444abcd555666aa";
-    const char *substr="abcd";
-    int sum=0;
-    int e=findCount(str1,substr,&sum);
-    printf("%d\n",sum);
-}
-
-int getStr(const char *str,const char *sub,char *re,char *key)
-{
-    if (str== NULL && re==NULL)
+    for(int i=0;i<CSIZE;++i)
     {
-        return -1;
+        printf("%s %s  %f %f %f  %f\n",stu[i].mingzi.xing,stu[i].mingzi.ming,stu[i].grade[0],stu[i].grade[1],stu[i].grade[2],stu[i].avg);
     }
-    char tempk[100],tempv[100];
-    sscanf(str," %[^=] = %[^\n]",tempk,tempv);
-    int len=strlen(tempk)-1;
-    int len1=strlen(tempv)-1;
-    int i=0;
-    while(isspace(tempk[len]))
+    double sum=0;
+    for(int i=0;i<CSIZE;++i)
     {
-        len--;
+        sum+=stu[i].avg;
     }
-    memcpy(key,tempk,len+1);
-    while(isspace(tempv[len1]))
-    {
-        len1--;
-    }
-    memcpy(re,tempv,len1+1);
-    return 0;
-}
-/**测试用例：
- * “key1 = valude1”
-*“key2 =       valude2      "
-*“key3  = valude3”
-“key4        = valude4”
-“key5   =   “
-“key6   =“
-“key7   =   “
- */
-void test3()
-{
-    char re[100],key[100];
-    const char *te="    key4        =     valude4   str ";
-    int e=getStr(te,"key4",re,key);
-    if (e!=0)
-    {
-        printf("Error: 输入为空");
-    }
-    printf("%s : %s\n%d %d\n",key,re,strlen(key),strlen(re));
-}
-
-int jiou(const char*str,char *reji,char *reou)
-{
-    if(str==NULL ||reji==NULL || reou == NULL)
-    {
-        return -1;
-    }
-    int len=strlen(str);
-    int j=0;
-    for(int i=1;i<len;i+=2)
-    {
-        reji[j++]=str[i];
-    }
-    j=0;
-    for(int i=0;i<len;i+=2)
-    {
-        reou[j++]=str[i];
-    }
-    return 0;
-}
-/**测试用例
- * "1a2b3c4d5z"
- *
- */
-void test4()
-{
-    const char *str="1a2b3c4d5z";
-    char reji[100]={'\0'};
-    char reou[100]={'\0'};
-    int e=jiou(str,reji,reou);
-    if (e!=0)
-    {
-        printf("Error: 输入为空");
-    }
-    printf("%s\n%s\n",reji,reou);
-}
-
-
-
-
-int main() {
-    test1();
-    test3();
-    test4();
-    return 0;
+    printf("%f\n",sum/3);
+return 0;
 }
